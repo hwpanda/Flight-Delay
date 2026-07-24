@@ -1,0 +1,49 @@
+# Deployment contract for model/xgb_final_model_26.pkl.
+#
+# The artifact inspection confirms 17 features, 2,000 trees, depth 6, and a
+# binary:logistic objective. Its embedded learning rate is 0.30. The legacy
+# grid notebook would imply model 26 used a 0.05 rate, so this discrepancy must
+# be reconciled from the original experiment outputs before retraining.
+model:
+  name: xgb_final_model_26
+  artifact: ../../model/xgb_final_model_26.pkl
+  objective: binary:logistic
+  trees: 2000
+  max_depth: 6
+  learning_rate_observed: 0.30
+  selected_from_legacy_grid: 26
+
+target:
+  name: ArrDel15
+  positive_class: arrival delayed 15 minutes or more
+
+features:
+  - Year
+  - Quarter
+  - Month
+  - DayofMonth
+  - DayOfWeek
+  - CRSDepTime
+  - CRSArrTime
+  - CRSElapsedTime
+  - Distance
+  - origin_temp_c
+  - origin_dewpt_c
+  - origin_slp_hpa
+  - origin_precip_mm
+  - NUMBER_OF_SEATS
+  - Reporting_Airline_woe
+  - Origin_woe
+  - Dest_woe
+
+legacy_evaluation:
+  development_period: 2023-01 through 2025-12, excluding holdout months
+  validation_split: 30 percent stratified random split
+  holdout_period: 2025-05 through 2025-07
+  classification_threshold: 0.30
+
+promotion_requirements:
+  - Use a strict chronological validation and test split.
+  - Store training-only WOE maps and the global fallback with the model.
+  - Test the exact inference feature builder against the training schema.
+  - Record calibration, AUC, precision, recall, F1, and threshold rationale.

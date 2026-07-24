@@ -4,3 +4,10 @@ __pycache__/
 *.pyc
 .DS_Store
 .env
+
+# Local training inputs and generated experiment outputs
+training/data/
+training/artifacts/
+training/reports/*
+!training/reports/.gitkeep
+training/notebooks/.ipynb_checkpoints/
