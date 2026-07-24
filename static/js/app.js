@@ -2,8 +2,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('prediction-form');
     const banner = document.getElementById('prediction-banner');
     const featuresBody = document.getElementById('features-table-body');
+    const airportInputs = [
+        document.getElementById('origin-airport'),
+        document.getElementById('dest-airport'),
+    ];
+    const supportedAirportCodes = new Set(
+        Array.from(
+            document.querySelectorAll('#supported-airports option'),
+            (option) => option.value,
+        ),
+    );
     let map;
     let routeLayer;
+
+    function validateAirportInput(input) {
+        input.value = input.value.toUpperCase();
+        const code = input.value.trim();
+        input.setCustomValidity(
+            code && !supportedAirportCodes.has(code)
+                ? 'Choose an airport from the supported-airports list.'
+                : '',
+        );
+    }
+
+    airportInputs.forEach((input) => {
+        input.addEventListener('input', () => validateAirportInput(input));
+        input.addEventListener('change', () => validateAirportInput(input));
+    });
 
     // Initialize Map
     function initMap() {
@@ -21,6 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
         banner.style.display = 'none';
+
+        airportInputs.forEach(validateAirportInput);
+        if (!form.reportValidity()) {
+            return;
+        }
 
         const payload = {
             flight_date: document.getElementById('flight-date').value,

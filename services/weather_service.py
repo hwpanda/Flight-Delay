@@ -41,3 +41,7 @@ class WeatherService:
             "origin_precip_mm": 0.0
         }
         return self.weather_medians.get((origin, month), weather_defaults)
+
+    def get_supported_airports(self):
+        """Return airport codes with at least one usable weather observation."""
+        return {origin for origin, _month in self.weather_medians}

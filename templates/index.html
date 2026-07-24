@@ -87,6 +87,9 @@
 
 							<div class="mb-3">
 								<label class="form-label">Route</label>
+								<p class="form-text mt-0">
+									Start typing to choose from the {{ supported_airports|length }} airports currently supported by the weather data.
+								</p>
 								<div class="row">
 									<div class="col">
                                         <label for="origin-airport" class="form-label small text-muted">Origin</label>
@@ -95,6 +98,8 @@
 											id="origin-airport"
 											class="form-control"
 											placeholder="ATL"
+											list="supported-airports"
+											pattern="[A-Za-z0-9]{3,4}"
 											maxlength="4"
 											required
 										/>
@@ -105,12 +110,20 @@
 											type="text"
 											id="dest-airport"
 											class="form-control"
-											placeholder="LAX"
+											placeholder="BOS"
+											list="supported-airports"
+											pattern="[A-Za-z0-9]{3,4}"
 											maxlength="4"
 											required
 										/>
 									</div>
 								</div>
+
+								<datalist id="supported-airports">
+									{% for code, airport in supported_airports %}
+									<option value="{{ code }}" label="{{ airport.city }}, {{ airport.state }}"></option>
+									{% endfor %}
+								</datalist>
 							</div>
 
 							<button class="btn btn-primary w-100" type="submit">

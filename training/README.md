@@ -58,3 +58,13 @@ The app currently substitutes monthly weather medians and a fixed 150 seats
 for live requests. That is acceptable only if the replacement model is trained
 and evaluated with those same inference-time substitutes, or the application is
 upgraded to supply compatible forecast and aircraft data.
+
+## Coverage backlog
+
+**Priority: expand the weather dataset for common airports not currently
+supported, beginning with LAX.** The interface is temporarily limited to the
+205 airport codes with usable weather records so it does not silently use the
+generic weather fallback. Before restoring a broader airport list, collect and
+validate weather coverage for the additional origins, regenerate the monthly
+weather lookup, retrain or re-evaluate the model using that coverage, and add
+an application test for each newly supported airport.
