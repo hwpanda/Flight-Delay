@@ -28,17 +28,25 @@ def haversine_distance(lat1, lon1, lat2, lon2):
 
 @app.route("/")
 def index():
+    return render_template("index.html")
+
+
+@app.route("/api/options")
+def options():
     airports = data_service.get_airports()
     supported_airports = [
-        (code, airports[code])
+        {
+            "code": code,
+            "city": airports[code]["city"],
+            "state": airports[code]["state"],
+        }
         for code in sorted(weather_service.get_supported_airports())
         if code in airports
     ]
-    return render_template(
-        "index.html",
-        airlines=data_service.get_airlines(),
-        supported_airports=supported_airports,
-    )
+    return jsonify({
+        "airlines": data_service.get_airlines(),
+        "supported_airports": supported_airports,
+    })
 
 @app.route("/api/predict", methods=["POST"])
 def predict():

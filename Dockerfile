@@ -1,3 +1,12 @@
+# Build the React application with a Node runtime that supports Vite.
+FROM node:20-slim AS frontend-build
+
+WORKDIR /frontend
+COPY frontend/package*.json ./
+RUN npm ci
+COPY frontend/ ./
+RUN npm run build
+
 # Use Python 3.10-slim (Matches your README requirement)
 FROM python:3.10-slim
 
@@ -15,6 +24,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the entire application structure
 # This includes app.py, services/, model/, data/, static/, and templates/
 COPY . .
+
+# Replace any local static build with the reproducible container build.
+COPY --from=frontend-build /static/react ./static/react
 
 # Expose the port Flask usually runs on
 EXPOSE 5000
